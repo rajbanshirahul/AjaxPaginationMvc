@@ -156,13 +156,14 @@
             });
 
             addPaginationHandlers();
-            supressDefaultBehaviors();
+            addHandlers();
 
             // attach event handlers when partial content is loaded through ajax
             $(Employees).on('loaded', function () {
                 addPaginationHandlers();
             });
 
+            // handlers for pagination
             function addPaginationHandlers() {
                 // Pager
                 $('.page-link').on('click', function (e) {
@@ -170,19 +171,6 @@
 
                     Employees.getEmployees(undefined, $(this).data('page'));
                     return false;
-                });
-
-                $('#btnFilter').on('click', function (e) {
-                    e.preventDefault();
-                    Employees.getEmployees();
-                    return false;
-                });
-
-                $('#btnSearch').keypress(function (e) {
-                    let keyCode = (e.keyCode ? e.keyCode : e.which);
-                    if (keyCode == '13') {
-                        Employees.getEmployees();
-                    }
                 });
 
                 // Other input fields
@@ -203,8 +191,8 @@
                 return param;
             }
 
-            // prevent default behaviors
-            function supressDefaultBehaviors() {
+            // handlers for page
+            function addHandlers() {
                  $('#employeeFilterForm').on('submit', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -214,6 +202,19 @@
                     e.preventDefault();
                     e.stopPropagation();
                 })
+
+                $('#btnFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Employees.getEmployees();
+                    return false;
+                });
+
+                $('#btnSearch').keypress(function (e) {
+                    let keyCode = (e.keyCode ? e.keyCode : e.which);
+                    if (keyCode == '13') {
+                        Employees.getEmployees();
+                    }
+                });
             }
         });
     </script>
