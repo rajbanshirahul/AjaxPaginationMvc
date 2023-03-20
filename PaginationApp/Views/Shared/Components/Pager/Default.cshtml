@@ -1,0 +1,47 @@
+﻿@model PaginationApp.Models.Pagination.PagerModel
+
+<nav class="">
+    @if (Model.TotalPages > 0)
+    {
+        <ul class="pagination">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" data-page="1" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-page="1">
+                        First
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" data-page="@(Model.CurrentPage - 1)" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-page="@(Model.CurrentPage - 1)">
+                        Prev
+                    </a>
+                </li>
+            }
+
+            @for (var pageIdx = Model.StartPage; pageIdx <= Model.EndPage; pageIdx++)
+            {
+                var classActive = pageIdx == Model.CurrentPage ? "active" : "";
+
+                <li class="page-item @classActive">
+                    <a class="page-link" data-page="@pageIdx" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-page="@pageIdx">@pageIdx</a>
+                </li>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" data-page="@(Model.CurrentPage + 1)" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-page="@(Model.CurrentPage + 1)">
+                        Next
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" data-page="@(Model.TotalPages)" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-page="@(Model.TotalPages)">
+                        Last
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</nav>

@@ -1,0 +1,48 @@
+﻿@using PaginationApp.Models.Pagination
+@using PaginationApp.Models.Employees
+@model PaginationApp.Models.Paging.PagedResult<Employee>
+
+<div class="table-responsive h-500px">
+    <table id="ticketSalesSummary" class="table">
+        <thead>
+            <tr>
+                <th scope="col">@Html.DisplayNameForInnerType((Employee model) => model.FirstName)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((Employee model) => model.LastName)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((Employee model) => model.Title)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((Employee model) => model.Department)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((Employee model) => model.Email)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((Employee model) => model.SocialSecurityNumber)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((Employee model) => model.City)</th>
+                <th scope="col">@Html.DisplayNameForInnerType((Employee model) => model.Salary)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.Title</td>
+                    <td>@item.Department</td>
+                    <td>@item.Email</td>
+                    <td>@item.SocialSecurityNumber</td>
+                    <td>@item.City</td>
+                    <td>@item.Salary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@* Pagination Footer (Pager and Summary) *@
+<div class="row mt-4">
+    <div class="col-sm-12 col-md-6 d-flex align-items-center">
+        @await Component.InvokeAsync("PaginationSummary",new PaginationSummaryModel(
+            Model.PageIndex, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount))
+    </div>
+    <div class="col-sm-12 col-md-6 row">
+        <span class="ms-md-auto">
+            @await Component.InvokeAsync("Pager", new PagerModel(Model.TotalPages, Model.PageIndex, "Employee", "Index"))
+        </span>
+    </div>
+</div>

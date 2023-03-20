@@ -1,0 +1,18 @@
+﻿@model PaginationApp.Models.Pagination.SortOrderModel
+
+<div class="w-auto d-inline-flex align-items-center position-relative text-gray-700 dark-text-gray-300">
+    <span class="me-1" style="white-space: nowrap;">Sort Order</span>
+    <select class="w-20 form-select d-inline-block box mt-3 mt-sm-0" name="sortOrder">
+        @foreach (var opt in Model.Options)
+        {
+            if (opt.Equals(Model.SortOrder, StringComparison.InvariantCultureIgnoreCase))
+            {
+                <option selected value="@opt">@opt</option>
+            }
+            else
+            {
+                <option value="@opt">@opt</option>
+            }
+        }
+    </select>
+</div>

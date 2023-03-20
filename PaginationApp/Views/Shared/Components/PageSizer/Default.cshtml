@@ -1,0 +1,19 @@
+﻿@model PaginationApp.Models.Pagination.PageSizeDdl
+
+<div class="w-56 d-inline-flex align-items-center position-relative text-gray-700 dark-text-gray-300">
+    <span class="me-1">Show</span>
+    <select class="w-20 form-select d-inline-block box mt-3 mt-sm-0" name="pageSize">
+        @foreach (var opt in Model.PageSizeOptions)
+        {
+            if (opt == Model.PageSize)
+            {
+                <option selected value="@opt">@opt</option>
+            }
+            else
+            {
+                <option value="@opt">@opt</option>
+            }
+        }
+    </select>
+    <span class="ms-1">entries</span>
+</div>

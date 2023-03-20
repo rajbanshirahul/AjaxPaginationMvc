@@ -1,0 +1,221 @@
+﻿@using PaginationApp.Models.Employees
+@using PaginationApp.Models.Pagination
+
+@model PaginationApp.Models.Paging.PagedResult<Employee>
+
+@* Employee Filter *@
+<form id="employeeFilterForm" class="row justify-content-between align-items-center form-inline border border-secondary mx-0 mb-1 p-4">
+    <div class="col-4 row mb-2">
+        <div class="col-auto">
+            <label for="FirstName" class="col-form-label">FirstName</label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="FirstName" value="" />
+        </div>
+    </div>
+
+    <div class="col-4 row mb-2">
+        <div class="col-auto">
+            <label for="LastName" class="col-form-label">LastName</label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="LastName" value="" />
+        </div>
+    </div>
+
+    <div class="col-4 row mb-2">
+        <div class="col-auto">
+            <label for="Email" class="col-form-label">Email</label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="Email" value="" />
+        </div>
+    </div>
+
+    <div class="col-4 row mb-2">
+        <div class="col-auto">
+            <label for="SocialSecurityNumber" class="col-form-label">SSN</label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="SocialSecurityNumber" value="" />
+        </div>
+    </div>
+
+    <div class="col-4 row mb-2">
+        <div class="col-auto">
+            <label for="Department" class="col-form-label">Dept.</label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="Department" value="" />
+        </div>
+    </div>
+
+    <div class="col-4 row mb-2">
+        <div class="col-auto">
+            <label for="Title" class="col-form-label">Title</label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="Title" value="" />
+        </div>
+    </div>
+
+    <div class="col-4 row mb-2">
+        <div class="col-auto">
+            <label for="City" class="col-form-label">City</label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="City" value="" />
+        </div>
+    </div>
+
+    <div class="col-4 row mb-2">
+        <div class="col-auto">
+            <label for="Salary" class="col-form-label">Salary</label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="Salary" value="" />
+        </div>
+    </div>
+    <div class="col-4 row mb-2 align-items-center">
+        <div class="col-auto">
+            <button class="form-control btn btn-secondary" type="reset">Reset</button>
+        </div>
+        <div class="col-auto">
+            <button id="btnFilter" class="form-control btn btn-success" type="button">Filter</button>
+        </div>
+    </div>
+</form>
+
+@* Pagination Filter *@
+<form id="employeePaginationForm" class="row justify-content-start align-items-center border border-secondary mx-0 my-2 p-2">
+    <span class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mt-md-1 mt-sm-1 mt-xs-1 mt-1">
+        @await Component.InvokeAsync("PageSizer", new PageSizeDdl(new int[] { 10, 20, 30, 50, 100 }, Model.PageSize, "Employee", "Indexx"))
+    </span>
+    <span class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mt-md-1 mt-sm-1 mt-xs-1 mt-1">
+        @{
+            var sortByNameValues = new Dictionary<string, string>
+        {
+        { Html.DisplayNameForInnerType((Employee model) => model.FirstName), nameof(Employee.FirstName) },
+        { Html.DisplayNameForInnerType((Employee model) => model.LastName), nameof(Employee.LastName) },
+        { Html.DisplayNameForInnerType((Employee model) => model.Title), nameof(Employee.Title) },
+        { Html.DisplayNameForInnerType((Employee model) => model.Department), nameof(Employee.Department) },
+        { Html.DisplayNameForInnerType((Employee model) => model.Email), nameof(Employee.Email) },
+        { Html.DisplayNameForInnerType((Employee model) => model.SocialSecurityNumber), nameof(Employee.SocialSecurityNumber) },
+        { Html.DisplayNameForInnerType((Employee model) => model.City), nameof(Employee.City) },
+        { Html.DisplayNameForInnerType((Employee model) => model.Salary), nameof(Employee.Salary) },
+        };
+        }
+        @await Component.InvokeAsync("SortBy", new SortByModel(sortByNameValues, nameof(Employee.FirstName)))
+    </span>
+    <span class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mt-md-1 mt-sm-1 mt-xs-1 mt-1">
+        @await Component.InvokeAsync("SortOrder", new SortOrderModel(new string[] { "ASC", "DESC" }, "ASC"))
+    </span>
+    <div class="row col-auto mt-1">
+        <div class="col-auto">
+            <label for="Search" class="col-form-label">Search</label>
+        </div>
+        <div class="col-auto">
+            <input id="btnSearch" class="form-control" type="text" name="Search" value="">
+        </div>
+    </div>
+</form>
+
+<div class="table-employees-wrapper">
+    <partial name="_List" model="@Model" />
+</div>
+
+@* Styles for Pagination Table *@
+@section Styles {
+    <partial name="_ListTableStyles" />
+}
+
+@* Table Pagination Initialization *@
+@section Scripts {
+    <script src="~/js/admin.employee.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize settings object
+            Employees.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("Index", "Employee")'
+            });
+
+            // attach before event handler to get all field parameters
+            $(Employees).on('before', function (e) {
+                e.preventDefault();
+
+                var employeeFilterFormValues = $('#employeeFilterForm').serializeArray();
+                $.each(employeeFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addPaginationHandlers();
+            supressDefaultBehaviors();
+
+            // attach event handlers when partial content is loaded through ajax
+            $(Employees).on('loaded', function () {
+                addPaginationHandlers();
+            });
+
+            function addPaginationHandlers() {
+                // Pager
+                $('.page-link').on('click', function (e) {
+                    e.preventDefault();
+
+                    Employees.getEmployees(undefined, $(this).data('page'));
+                    return false;
+                });
+
+                $('#btnFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Employees.getEmployees();
+                    return false;
+                });
+
+                $('#btnSearch').keypress(function (e) {
+                    let keyCode = (e.keyCode ? e.keyCode : e.which);
+                    if (keyCode == '13') {
+                        Employees.getEmployees();
+                    }
+                    return false;
+                });
+
+                // Other input fields
+            }
+
+            // get all field params
+            function getPaginationFieldParams() {
+                var param = {}
+
+                var activePageIndex = $('.page-item.active .page-link').data('page');
+                param['pageIndex'] = activePageIndex;
+
+                var employeePaginationFormValues = $('#employeePaginationForm').serializeArray();
+                $.each(employeePaginationFormValues, function (i, obj) {
+                    param[obj['name']] = obj['value'];
+                });
+
+                return param;
+            }
+
+            // prevent default behaviors
+            function supressDefaultBehaviors() {
+                 $('#employeeFilterForm').on('submit', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#employeePaginationForm').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+            }
+        });
+    </script>
+}
