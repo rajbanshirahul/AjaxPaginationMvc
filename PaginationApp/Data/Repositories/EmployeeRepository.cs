@@ -15,14 +15,17 @@ namespace PaginationApp.Data.Repositories
 
             // searching
             if (!string.IsNullOrEmpty(request.Search))
+            {
+                var search = request.Search.Trim();
                 employees = employees.Where(
-                    e => e.FirstName.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase)
-                    || e.LastName.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase)
-                    || e.Title.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase)
-                    || e.City.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase)
-                    || e.Department.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase)
-                    || e.Email.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase)
-                    || e.SocialSecurityNumber.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase));
+                    e => e.FirstName.Contains(search, StringComparison.InvariantCultureIgnoreCase)
+                    || e.LastName.Contains(search, StringComparison.InvariantCultureIgnoreCase)
+                    || e.Title.Contains(search, StringComparison.InvariantCultureIgnoreCase)
+                    || e.City.Contains(search, StringComparison.InvariantCultureIgnoreCase)
+                    || e.Department.Contains(search, StringComparison.InvariantCultureIgnoreCase)
+                    || e.Email.Contains(search, StringComparison.InvariantCultureIgnoreCase)
+                    || e.SocialSecurityNumber.Contains(search, StringComparison.InvariantCultureIgnoreCase));
+            }
 
             if (!string.IsNullOrWhiteSpace(request.FirstName))
                 employees = employees.Where(e => e.FirstName.Equals(request.FirstName.Trim(), StringComparison.InvariantCultureIgnoreCase));
@@ -32,7 +35,7 @@ namespace PaginationApp.Data.Repositories
 
             if (!string.IsNullOrWhiteSpace(request.Department))
                 employees = employees.Where(e => e.Department.Equals(request.Department.Trim(), StringComparison.InvariantCultureIgnoreCase));
-            
+
             if (!string.IsNullOrWhiteSpace(request.Email))
                 employees = employees.Where(e => e.Email.Equals(request.Email.Trim(), StringComparison.InvariantCultureIgnoreCase));
 
@@ -77,10 +80,11 @@ namespace PaginationApp.Data.Repositories
 
             var filteredCount = employees.Count();
             var totalPages = (int)Math.Ceiling((decimal)filteredCount / request.PageSize);
+            var pageIndex = request.PageIndex > totalPages ? totalPages : request.PageIndex;
 
             // paging
             employees = employees
-                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Skip((pageIndex - 1) * request.PageSize)
                 .Take(request.PageSize);
 
             return new PagedResult<Employee>
@@ -89,7 +93,7 @@ namespace PaginationApp.Data.Repositories
                 FilteredCount = filteredCount,
                 TotalCount = employeesAll.Count(),
                 PageSize = request.PageSize,
-                PageIndex = request.PageIndex,
+                PageIndex = pageIndex,
                 TotalPages = totalPages
             };
         }
