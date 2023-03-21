@@ -2,9 +2,10 @@
 var Employees = {
     settings: {
         ajax: false,
-        fetchUrl: false,
         method: 'GET',
+        fetchUrl: false,
         browserPath: false,
+        selector: undefined
     },
 
     params: {
@@ -44,7 +45,9 @@ var Employees = {
                 url: urlBuilder.addParameters(paramsBuilder.build()).build(),
                 type: this.settings.method,
                 success: function (response) {
-                    $('.table-employees-wrapper').html(response);
+                    if (self.settings.selector) {
+                        $(self.settings.selector).html(response);
+                    }
                     $(self).trigger({ type: 'loaded' });
                 },
                 error: function () {
@@ -71,7 +74,9 @@ var Employees = {
                 type: 'POST',
                 data: JSON.stringify(paramsBuilder.build()),
                 success: function (response) {
-                    $('.table-employees-wrapper').html(response);
+                    if (self.settings.selector) {
+                        $(self.settings.selector).html(response);
+                    }
                     $(self).trigger({ type: 'loaded' });
                 },
                 error: function () {

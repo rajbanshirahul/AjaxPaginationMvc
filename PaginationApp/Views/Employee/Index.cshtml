@@ -140,7 +140,8 @@
                 ajax: true,
                 method: 'GET',
                 browserPath: '@Context.Request.Path',
-                fetchUrl: '@Url.Action("Index", "Employee")'
+                fetchUrl: '@Url.Action("Index", "Employee")',
+                selector: '.table-employees-wrapper'
             });
 
             // attach before event handler to get all field parameters

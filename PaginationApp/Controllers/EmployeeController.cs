@@ -18,21 +18,25 @@ namespace PaginationApp.Controllers
         {
             var employees = await _employeeService.GetEmployeesAsync(request);
 
-            if (WebHelper.IsAjaxRequest(Request))
-                return PartialView("_List", employees);
-
-            return View(employees);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Indexx([FromBody] EmployeeListRequest request)
-        {
-            var employees = await _employeeService.GetEmployeesAsync(request);
+            await Task.Delay(1200);
 
             if (WebHelper.IsAjaxRequest(Request))
                 return PartialView("_List", employees);
 
             return View(employees);
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Indexx([FromBody] EmployeeListRequest request)
+        //{
+        //    var employees = await _employeeService.GetEmployeesAsync(request);
+
+        //    await Task.Delay(1200);
+
+        //    if (WebHelper.IsAjaxRequest(Request))
+        //        return PartialView("_List", employees);
+
+        //    return View(employees);
+        //}
     }
 }
