@@ -1,6 +1,11 @@
-﻿@using PaginationApp.Models.Pagination
+﻿@using AutoMapper;
+@using PaginationApp.Models.Pagination
 @using PaginationApp.Models.Employees
-@model PaginationApp.Models.Paging.PagedResult<Employee>
+@using PaginationApp.Models.Paging
+
+@inject IMapper mapper;
+
+@model PagedResult<Employee>
 
 <div class="table-responsive h-500px">
     <table id="ticketSalesSummary" class="table">
@@ -34,15 +39,4 @@
     </table>
 </div>
 
-@* Pagination Footer (Pager and Summary) *@
-<div class="row mt-4">
-    <div class="col-sm-12 col-md-6 d-flex align-items-center">
-        @await Component.InvokeAsync("PaginationSummary",new PaginationSummaryModel(
-            Model.PageIndex, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount))
-    </div>
-    <div class="col-sm-12 col-md-6 row">
-        <span class="ms-md-auto">
-            @await Component.InvokeAsync("Pager", new PagerModel(Model.TotalPages, Model.PageIndex, "Employee", "Index"))
-        </span>
-    </div>
-</div>
+<partial name="_PaginationFooter" model="mapper.Map<PagedResult<object>>(Model)" />

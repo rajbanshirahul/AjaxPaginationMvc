@@ -1,0 +1,15 @@
+﻿@using PaginationApp.Models.Pagination
+@model PaginationApp.Models.Paging.PagedResult<object>
+
+@* Pagination Footer (Pager and Summary) *@
+<div class="row mt-4">
+    <div class="col-sm-12 col-md-6 d-flex align-items-center">
+        @await Component.InvokeAsync("PaginationSummary",new PaginationSummaryModel(
+        Model.PageIndex, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount))
+    </div>
+    <div class="col-sm-12 col-md-6 row">
+        <span class="ms-md-auto">
+            @await Component.InvokeAsync("Pager", new PagerModel(Model.TotalPages, Model.PageIndex, "Employee", "Index"))
+        </span>
+    </div>
+</div>

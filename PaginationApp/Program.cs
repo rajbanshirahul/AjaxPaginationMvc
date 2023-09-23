@@ -1,10 +1,12 @@
 using PaginationApp.Extensions;
+using PaginationApp.Infrastructure.Automapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddApplicationServices();
 
 
